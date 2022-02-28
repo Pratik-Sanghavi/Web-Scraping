@@ -27,5 +27,5 @@ The following packages are needed to run the script:-
   ```
 Run the script using
 ```
-python hami-scraping.py
+python hami_scraping.py
 ```
