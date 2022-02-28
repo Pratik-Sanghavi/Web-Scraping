@@ -25,3 +25,7 @@ The following packages are needed to run the script:-
   ```
   pip install tqdm
   ```
+Run the script using
+```
+python hami-scraping.py
+```
