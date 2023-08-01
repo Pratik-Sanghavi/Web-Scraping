@@ -12,15 +12,20 @@ class CentralActsSpider(scrapy.Spider):
         categories = response.css('.list-group-item>a::text').getall()
         for link, category in zip(links, categories):
             yield response.follow(link, callback=self.parse_category, cb_kwargs={'category':category})
+            break
     
     def parse_category(self, response, category):
         view_links = response.xpath('//td[@headers="t4"]/a/@href').extract()
         for link in view_links:
-            yield {
-                'Category': category,
-                'PDF Act': response.urljoin(response.follow(link, callback=self.parse_detail, cb_kwargs={'category':category}))
-            }
+            yield response.follow(link, callback=self.parse_detail, cb_kwargs={'category':category})
+        next_link = response.css('a.pull-right::attr(href)').get()
+        if next_link is not None:
+            yield response.follow(next_link, callback=self.parse_category, cb_kwargs={'category':category})
 
     def parse_detail(self, response, category):
         details = response.css('.row>a::attr(href)').get()
-        yield details
+        print(response.urljoin(details))
+        yield {
+            'Category': category,
+            'PDF Act': response.urljoin(details)
+        }
