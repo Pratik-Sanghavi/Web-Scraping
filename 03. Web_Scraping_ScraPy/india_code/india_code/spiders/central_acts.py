@@ -6,6 +6,10 @@ class CentralActsSpider(scrapy.Spider):
     start_urls = [
         "https://www.indiacode.nic.in/handle/123456789/1362/browse?page-token=1552de317077&page-token-value=0eb31a8e0107c0923155682b5424e2c7&nccharset=ABD5E664&type=ministry&order=ASC&rpp=100&submit_browse=Update"
     ]
+
+    custom_settings = {
+        'DOWNLOAD_DELAY': 2
+    }
     
     def parse(self, response):
         links = response.css('.list-group-item>a::attr(href)').getall()

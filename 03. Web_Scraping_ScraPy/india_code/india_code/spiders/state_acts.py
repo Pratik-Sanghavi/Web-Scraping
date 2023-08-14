@@ -6,6 +6,10 @@ class StateActsSpider(scrapy.Spider):
     start_urls=[
         "https://www.indiacode.nic.in/"
     ]
+    
+    custom_settings = {
+        'DOWNLOAD_DELAY': 2
+    }
 
     def parse(self, response):
         state_info = response.xpath('//a[contains(text(), "State Acts")]/following-sibling::div//li/a')
