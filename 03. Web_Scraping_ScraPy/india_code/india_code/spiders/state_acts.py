@@ -1,5 +1,6 @@
 from pathlib import Path
 import scrapy
+import csv
 
 class StateActsSpider(scrapy.Spider):
     name="state_acts"
@@ -13,6 +14,10 @@ class StateActsSpider(scrapy.Spider):
 
     def parse(self, response):
         state_info = response.xpath('//a[contains(text(), "State Acts")]/following-sibling::div//li/a')
+        with open('./data/state_acts.csv', 'w', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['Year', 'State', 'PDF Act']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
         for state in state_info:
             name = state.xpath('normalize-space(text())').extract_first()
             url = state.xpath('@href').extract_first()
@@ -41,7 +46,14 @@ class StateActsSpider(scrapy.Spider):
 
     def parse_detail(self, response, state, year):
         details = response.css('.row>a::attr(href)').get()
-        
+        with open('./data/state_acts.csv', 'a', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['Year', 'State', 'PDF Act']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writerow({
+                'Year':year,
+                'State':state,
+                'PDF Act': response.urljoin(details)    
+            })
         yield {
             'Year':year,
             'State': state,

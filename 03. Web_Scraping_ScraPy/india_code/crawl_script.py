@@ -6,7 +6,7 @@ from india_code.spiders.state_acts import StateActsSpider as SpiderSA
 def run_spiders():
     process = CrawlerProcess(get_project_settings())
 
-    process.crawl(SpiderCA)
+    # process.crawl(SpiderCA)
     process.crawl(SpiderSA)
 
     process.start()
