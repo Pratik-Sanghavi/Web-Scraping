@@ -1,5 +1,6 @@
 from pathlib import Path
 import scrapy
+import csv
 
 class CentralActsSpider(scrapy.Spider):
     name="central_acts"
@@ -14,6 +15,11 @@ class CentralActsSpider(scrapy.Spider):
     def parse(self, response):
         links = response.css('.list-group-item>a::attr(href)').getall()
         categories = response.css('.list-group-item>a::text').getall()
+        with open('./data/central_acts.csv', 'w', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['Category', 'PDF Act']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+
         for link, category in zip(links, categories):
             yield response.follow(link, callback=self.parse_category, cb_kwargs={'category':category})
     
@@ -28,7 +34,15 @@ class CentralActsSpider(scrapy.Spider):
     def parse_detail(self, response, category):
         details = response.css('.row>a::attr(href)').get()
         
-        yield {
-            'Category': category,
-            'PDF Act': response.urljoin(details)
-        }
+        with open('./data/central_acts.csv', 'a', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['Category', 'PDF Act']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writerow({
+                'Category': category,
+                'PDF Act': response.urljoin(details)
+            })
+        
+        # yield {
+        #     'Category': category,
+        #     'PDF Act': response.urljoin(details)
+        # }
