@@ -16,7 +16,6 @@ class BookingFiltration():
         )
         for star_value in star_values:
             for star_element in star_child_elements:
-                # <h1>Jim</h1>
                 if str(star_element.get_attribute('innerHTML')).strip() == f'{star_value} stars':
                     star_element.click()
 
