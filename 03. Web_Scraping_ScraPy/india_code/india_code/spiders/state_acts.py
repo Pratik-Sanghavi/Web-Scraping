@@ -52,10 +52,5 @@ class StateActsSpider(scrapy.Spider):
             writer.writerow({
                 'Year':year,
                 'State':state,
-                'PDF Act': response.urljoin(details)    
+                'PDF Act': response.urljoin(details)
             })
-        # yield {
-        #     'Year':year,
-        #     'State': state,
-        #     'PDF Act': response.urljoin(details)
-        # }
